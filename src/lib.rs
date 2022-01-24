@@ -16,22 +16,26 @@
 
 mod data;
 
-#[cfg(test)]
-mod tests;
-
 use ethereum::Log;
-use evm::ExitError;
+use evm::{executor::stack::PrecompileFailure, ExitError};
 use primitive_types::{H160, H256};
 
 pub use data::{Address, EvmData, EvmDataReader, EvmDataWriter};
 pub use precompile_utils_macro::generate_function_selector;
 
 /// Alias for Result returning an EVM precompile error.
-pub type EvmResult<T = ()> = Result<T, ExitError>;
+pub type EvmResult<T = ()> = Result<T, PrecompileFailure>;
+
+#[macro_export(crate)]
+macro_rules! err {
+    ($e: expr) => {
+        PrecompileFailure::Error { exit_status: $e }
+    };
+}
 
 /// Return an error with provided (static) text.
-pub fn error<T: Into<std::borrow::Cow<'static, str>>>(text: T) -> ExitError {
-    ExitError::Other(text.into())
+pub fn error<T: Into<std::borrow::Cow<'static, str>>>(text: T) -> PrecompileFailure {
+    err!(ExitError::Other(text.into()))
 }
 
 /// Builder for PrecompileOutput.
@@ -165,10 +169,13 @@ impl Gasometer {
 
     /// Record cost, and return error if it goes out of gas.
     pub fn record_cost(&mut self, cost: u64) -> EvmResult {
-        self.used_gas = self.used_gas.checked_add(cost).ok_or(ExitError::OutOfGas)?;
+        self.used_gas = self
+            .used_gas
+            .checked_add(cost)
+            .ok_or(err!(ExitError::OutOfGas))?;
 
         match self.target_gas {
-            Some(gas_limit) if self.used_gas > gas_limit => Err(ExitError::OutOfGas),
+            Some(gas_limit) if self.used_gas > gas_limit => Err(err!(ExitError::OutOfGas)),
             _ => Ok(()),
         }
     }
@@ -185,11 +192,11 @@ impl Gasometer {
 
         let topic_cost = G_LOGTOPIC
             .checked_mul(topics as u64)
-            .ok_or(ExitError::OutOfGas)?;
+            .ok_or(err!(ExitError::OutOfGas))?;
 
         let data_cost = G_LOGDATA
             .checked_mul(data_len as u64)
-            .ok_or(ExitError::OutOfGas)?;
+            .ok_or(err!(ExitError::OutOfGas))?;
 
         self.record_cost(G_LOG)?;
         self.record_cost(topic_cost)?;
@@ -216,7 +223,7 @@ impl Gasometer {
             Some(gas_limit) => Some(
                 gas_limit
                     .checked_sub(self.used_gas)
-                    .ok_or(ExitError::OutOfGas)?,
+                    .ok_or(err!(ExitError::OutOfGas))?,
             ),
         })
     }
