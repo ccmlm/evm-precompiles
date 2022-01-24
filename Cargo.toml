@@ -1,5 +1,5 @@
 [package]
-name = "evm-precompile-utils"
+name = "precompile-utils"
 version = "0.2.0"
 authors = ["PureStake"]
 edition = "2021"
