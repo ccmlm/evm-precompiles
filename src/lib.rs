@@ -20,8 +20,8 @@ mod data;
 mod tests;
 
 use ethereum::Log;
-use ethereum_types::{H160, H256};
 use evm::ExitError;
+use primitive_types::{H160, H256};
 
 pub use data::{Address, EvmData, EvmDataReader, EvmDataWriter};
 pub use precompile_utils_macro::generate_function_selector;
