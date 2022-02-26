@@ -21,7 +21,7 @@ use evm::{executor::stack::PrecompileFailure, ExitError};
 use primitive_types::{H160, H256};
 
 pub use data::{Address, EvmData, EvmDataReader, EvmDataWriter};
-pub use precompile_utils_macro::generate_function_selector;
+pub use evm_precompiles_derive::generate_function_selector;
 
 /// Alias for Result returning an EVM precompile error.
 pub type EvmResult<T = ()> = Result<T, PrecompileFailure>;
