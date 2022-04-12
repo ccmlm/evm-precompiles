@@ -16,7 +16,7 @@
 
 use super::{error, EvmResult};
 use core::{any::type_name, ops::Range};
-use primitive_types::{H160, H256, U256};
+use ethereum_types::{H160, H256, U256};
 use std::{convert::TryInto, vec, vec::Vec};
 
 /// The `address` type of Solidity.

@@ -17,8 +17,8 @@
 mod data;
 
 use ethereum::Log;
+use ethereum_types::{H160, H256};
 use evm::{executor::stack::PrecompileFailure, ExitError};
-use primitive_types::{H160, H256};
 
 pub use data::{Address, EvmData, EvmDataReader, EvmDataWriter};
 pub use evm_precompiles_derive::generate_function_selector;
