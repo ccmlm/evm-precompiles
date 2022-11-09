@@ -1,4 +1,4 @@
-all: release
+all: fmt lint
 
 lint:
 	cargo clippy
@@ -13,13 +13,6 @@ bench:
 
 build:
 	cargo build
-
-release:
-	if [[ "Linux" == `uname -s` ]]; then\
-	    cargo build --release --target=x86_64-unknown-linux-musl --bins;\
-	else\
-	    cargo build --release --bins;\
-	fi
 
 fmt:
 	bash tools/fmt.sh
