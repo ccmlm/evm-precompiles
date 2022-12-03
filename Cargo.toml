@@ -11,9 +11,9 @@ keywords = ["eth", "evm"]
 categories = ["data-structures", "algorithms"]
 
 [dependencies]
-evm = { version = "0.35", default-features = false, features = ["with-serde"] }
-ethereum = { version = "0.12", default-features = false, features = ["with-serde"] }
-ethereum-types = "0.13.1"
+evm = { version = "0.37", default-features = false, features = ["with-serde"] }
+ethereum = { version = "0.14", default-features = false, features = ["with-serde"] }
+ethereum-types = "0.14.0"
 num_enum = { version = "0.5.6", default-features = false }
 evm-precompiles-derive= { git = "https://github.com/rust-util-collections/evm-precompiles-derive", branch = "main" }
 log = "0.4.14"
